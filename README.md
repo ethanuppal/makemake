@@ -47,8 +47,8 @@ println!("{}", makefile.build());
 
 We can use our Makefile to build an example project.
 ```shell
-cargo run c_project > examples/Makefile
+cargo run --example c_project > examples/Makefile
 cd examples
-make
-./main
+make && ./main
 ```
+The actual example also comes with a `make clean`!
