@@ -2,6 +2,14 @@
 
 `makemake` is a rust library for building Makefiles programmatically.
 
+## Usage
+
+Run this command in your rust project root:
+```
+cargo add makemake
+```
+You can find the crate [on crates.io](https://crates.io/crates/makemake).
+
 ## Example
 
 Let's make a Makefile for a C project.
