@@ -2,6 +2,10 @@
 name = "makemake"
 version = "0.1.0"
 edition = "2021"
+authors = ["Ethan Uppal"]
+repository = "https://github.com/ethanuppal/makemake"
+description = "Library for building Makefiles programmatically"
+license-file = "LICENSE"
 
 [dependencies]
 insta = "1.39.0"
