@@ -26,6 +26,10 @@ impl Expr {
             }
         })
     }
+
+    pub fn then<E: Into<Expr>>(self, expr: E) -> Expr {
+        self.concat(" ").concat(expr)
+    }
 }
 
 impl Default for Expr {

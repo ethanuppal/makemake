@@ -44,7 +44,7 @@ impl Makefile {
         self.build_assign(AssignmentKind::Append, name, value)
     }
 
-    pub fn rule<S: AsRef<str>>(&mut self, target: S) -> RuleRef {
+    pub fn rule<E: Into<Expr>>(&mut self, target: E) -> RuleRef {
         let rule = RuleRef::new(target);
         self.add(Box::new(rule.clone()));
         rule

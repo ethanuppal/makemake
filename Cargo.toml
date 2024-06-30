@@ -1,12 +1,17 @@
 [package]
 name = "makemake"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Ethan Uppal"]
 repository = "https://github.com/ethanuppal/makemake"
 description = "Library for building Makefiles programmatically"
 license-file = "LICENSE"
+license = "MIT"
 
 [dependencies]
 insta = "1.39.0"
 paste = "1.0.15"
+
+[[bin]]
+name = "c_project"
+path = "examples/c_project.rs"
