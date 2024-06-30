@@ -1,5 +1,8 @@
 # makemake
 
+![CI](https://github.com/ethanuppal/makemake/actions/workflows/ci.yaml/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/ethanuppal/makemake/badge)](https://www.codefactor.io/repository/github/ethanuppal/makemake)
+
 `makemake` is a rust library for building Makefiles programmatically.
 
 ## Usage
@@ -12,7 +15,7 @@ You can find the crate [on crates.io](https://crates.io/crates/makemake).
 
 ## Example
 
-Let's make a Makefile for a C project.
+Let's build a Makefile for a C project.
 ```rs
 let mut makefile = Makefile::new();
 ```
@@ -40,12 +43,12 @@ makefile.rule(target).dep("main.c").dep(obj).cmd(
 );
 ```
 
-Finally, we can build and print the Makefile.
+Finally, we can print the resultant Makefile.
 ```rs
 println!("{}", makefile.build());
 ```
 
-We can use our Makefile to build an example project.
+Indeed, we can use our Makefile to build an example project.
 ```shell
 cargo run --example c_project > examples/Makefile
 cd examples
