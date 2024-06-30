@@ -1,0 +1,16 @@
+---
+source: src/lib.rs
+expression: makefile.build()
+---
+# This is a
+# testing makefile
+
+A = foobar
+C = $(subst foo,bar,$(A))
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+.PHONY: my_rule
+my_rule: dep1 dep2 | oodep1 oodep2
+	foo -f $(A) -o $@ -i $<
+	cc $(value C) and rest of cmd
+SIM ?= icarus

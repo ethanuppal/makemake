@@ -1,0 +1,8 @@
+[package]
+name = "makemake"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+insta = "1.39.0"
+paste = "1.0.15"
