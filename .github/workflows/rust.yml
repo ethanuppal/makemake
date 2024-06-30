@@ -1,23 +1,24 @@
-name: Rust
+name: CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+  push:
+    branches:
+      - main
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  build_and_test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-14, macos-13, macos-12]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
-    - name: Cache
-      uses: actions/cache@v4.0.2
+    - name: Rust Caching
+      uses: Swatinem/rust-cache@v2.7.3
     - name: Build
       run: cargo build --verbose
     - name: Check formatting
