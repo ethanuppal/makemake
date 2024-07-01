@@ -1,6 +1,6 @@
 [package]
 name = "makemake"
-version = "0.1.2-patch1"
+version = "0.1.2-patch2"
 edition = "2021"
 authors = ["Ethan Uppal"]
 repository = "https://github.com/ethanuppal/makemake"

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Prevent cargo test and cargo clippy from running simultaneously
+set -e
+
+# Run cargo clippy
+echo "Running cargo clippy..."
+cargo clippy -- -D warnings
+
+# If cargo clippy succeeds, run cargo test
+if [ $? -eq 0 ]; then
+  echo "Running cargo test..."
+  cargo test
+
+  if [ $? -eq 0 ]; then
+    exit 0
+  else
+    echo "cargo test failed"
+    exit 1
+  fi
+else
+  echo "cargo clippy found issues"
+  exit 1
+fi

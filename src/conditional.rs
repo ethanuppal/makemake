@@ -3,14 +3,15 @@ use crate::{
     emitter::EmittableContainer,
     expr::Expr,
     rrc::{rrc, RRC},
-    symbol_context::{Resolvable, SymbolContext, VariablePromise}
+    symbol_context::{Resolvable, SymbolContext},
+    var::Variable
 };
 use std::fmt::Write;
 
 pub(crate) enum Condition {
     Eq(Expr, Expr),
-    Def(VariablePromise),
-    Undef(VariablePromise)
+    Def(Variable),
+    Undef(Variable)
 }
 
 impl Emittable for Condition {
@@ -113,16 +114,18 @@ impl ConditionalRef {
         self.build_conditional(Some(Condition::Eq(lhs.into(), rhs.into())), f)
     }
 
-    pub fn when_def<V: Into<VariablePromise>, F: FnOnce(&mut Branch)>(
+    pub fn when_def<V: Resolvable, F: FnOnce(&mut Branch)>(
         self, var: V, f: F
     ) -> ConditionalRef {
-        self.build_conditional(Some(Condition::Def(var.into())), f)
+        let var = var.resolve(&mut self.ctx.borrow_mut());
+        self.build_conditional(Some(Condition::Def(var)), f)
     }
 
-    pub fn when_undef<V: Into<VariablePromise>, F: FnOnce(&mut Branch)>(
+    pub fn when_undef<V: Resolvable, F: FnOnce(&mut Branch)>(
         self, var: V, f: F
     ) -> ConditionalRef {
-        self.build_conditional(Some(Condition::Undef(var.into())), f)
+        let var = var.resolve(&mut self.ctx.borrow_mut());
+        self.build_conditional(Some(Condition::Undef(var)), f)
     }
 
     pub fn otherwise<F: FnOnce(&mut Branch)>(self, f: F) -> ConditionalRef {

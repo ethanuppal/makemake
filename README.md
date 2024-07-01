@@ -56,6 +56,14 @@ make && ./main
 ```
 The actual example also comes with a `make clean`!
 
+### Setting Up Git Hooks
+
+After cloning the repository, run the following script to set up the hooks:
+
+```shell
+/bin/sh setup_hooks.sh
+```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE), a copy of which is available in this directory.
