@@ -1,6 +1,7 @@
 use crate::{
-    emittable::MakefileEmittable,
-    expr::{Expr, MakefileEmittableVec}
+    emittable::Emittable,
+    expr::{EmittableVec, Expr},
+    symbol_context::SymbolContext
 };
 
 pub struct Directive {
@@ -17,9 +18,9 @@ impl Directive {
     }
 }
 
-impl MakefileEmittable for Directive {
-    fn emit(&self) -> String {
-        format!("{} {}", self.name, self.args.join_emit(" "))
+impl Emittable for Directive {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        format!("{} {}", self.name, self.args.join_emit(" ", ctx))
     }
 }
 
@@ -38,8 +39,8 @@ impl Include {
     }
 }
 
-impl MakefileEmittable for Include {
-    fn emit(&self) -> String {
-        self.directive.emit()
+impl Emittable for Include {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        self.directive.emit(ctx)
     }
 }

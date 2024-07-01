@@ -1,4 +1,9 @@
-use crate::{emittable::MakefileEmittable, expr::Expr, var::Variable};
+use crate::{
+    emittable::Emittable,
+    expr::Expr,
+    symbol_context::{Resolvable, SymbolContext},
+    var::Variable
+};
 
 pub enum AssignmentKind {
     Overwrite,
@@ -6,8 +11,8 @@ pub enum AssignmentKind {
     Append
 }
 
-impl MakefileEmittable for AssignmentKind {
-    fn emit(&self) -> String {
+impl Emittable for AssignmentKind {
+    fn emit(&self, _ctx: &mut SymbolContext) -> String {
         match &self {
             Self::Overwrite => "=",
             Self::Underwrite => "?=",
@@ -35,13 +40,11 @@ impl Assignment {
     }
 }
 
-impl MakefileEmittable for Assignment {
-    fn emit(&self) -> String {
-        format!(
-            "{} {} {}",
-            self.var.name(),
-            self.kind.emit(),
-            self.value.emit()
-        )
+impl Emittable for Assignment {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        let kind = self.kind.emit(ctx);
+        let value = self.value.emit(ctx);
+        let name = self.var.name(ctx);
+        format!("{} {} {}", name, kind, value)
     }
 }

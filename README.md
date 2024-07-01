@@ -34,18 +34,18 @@ let target = makefile.assign("TARGET", "main");
 
 Next, we'll define the rule to create the target.
 ```rs
-makefile.rule(target).dep("main.c").dep(obj).cmd(
-    Expr::from(cc)
-        .then(cflags)
-        .then("-o")
-        .then(Variable::target())
-        .then(Variable::deps())
-);
+makefile.rule(target).dep("main.c").dep(obj).cmd(expr!(
+    cc,
+    cflags,
+    "-o",
+    makefile.target_var(),
+    makefile.deps_var()
+));
 ```
 
 Finally, we can print the resultant Makefile.
 ```rs
-println!("{}", makefile.build());
+print!("{}", makefile.build());
 ```
 
 Indeed, we can use our Makefile to build an example project.
@@ -55,3 +55,7 @@ cd examples
 make && ./main
 ```
 The actual example also comes with a `make clean`!
+
+## License
+
+This project is licensed under the [MIT License](LICENSE), a copy of which is available in this directory.

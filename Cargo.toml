@@ -1,11 +1,14 @@
 [package]
 name = "makemake"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Ethan Uppal"]
 repository = "https://github.com/ethanuppal/makemake"
 description = "Library for building Makefiles programmatically"
 license = "MIT"
+
+[package.metadata.docs.rs]
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 
 [dependencies]
 insta = "1.39.0"

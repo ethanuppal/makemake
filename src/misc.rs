@@ -1,4 +1,4 @@
-use crate::emittable::MakefileEmittable;
+use crate::{emittable::Emittable, symbol_context::SymbolContext};
 
 pub struct Comment {
     text: String
@@ -12,8 +12,8 @@ impl Comment {
     }
 }
 
-impl MakefileEmittable for Comment {
-    fn emit(&self) -> String {
+impl Emittable for Comment {
+    fn emit(&self, _ctx: &mut SymbolContext) -> String {
         self.text
             .lines()
             .map(|line| format!("# {}", line))
@@ -24,8 +24,8 @@ impl MakefileEmittable for Comment {
 
 pub struct Newline;
 
-impl MakefileEmittable for Newline {
-    fn emit(&self) -> String {
+impl Emittable for Newline {
+    fn emit(&self, _ctx: &mut SymbolContext) -> String {
         String::new()
     }
 }

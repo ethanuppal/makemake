@@ -1,7 +1,7 @@
 use crate::{
-    emittable::MakefileEmittable,
-    expr::{Expr, MakefileEmittableVec},
-    var::Variable
+    emittable::Emittable,
+    expr::{EmittableVec, Expr},
+    symbol_context::{Resolvable, SymbolContext, VariablePromise}
 };
 use paste::paste;
 
@@ -113,20 +113,20 @@ impl Function {
     func!(value var);
 }
 
-impl MakefileEmittable for Function {
-    fn emit(&self) -> String {
-        format!("$({} {})", self.name, self.args.join_emit(","))
+impl Emittable for Function {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        format!("$({} {})", self.name, self.args.join_emit(",", ctx))
     }
 }
 
 pub struct Substitution {
-    var: Variable,
+    var: VariablePromise,
     old_suffix: Expr,
     new_suffix: Expr
 }
 
 impl Substitution {
-    pub fn new<V: Into<Variable>, E1: Into<Expr>, E2: Into<Expr>>(
+    pub fn new<V: Into<VariablePromise>, E1: Into<Expr>, E2: Into<Expr>>(
         var: V, old_suffix: E1, new_suffix: E2
     ) -> Self {
         Self {
@@ -137,13 +137,11 @@ impl Substitution {
     }
 }
 
-impl MakefileEmittable for Substitution {
-    fn emit(&self) -> String {
-        format!(
-            "$({}:{}={})",
-            self.var.name(),
-            self.old_suffix.emit(),
-            self.new_suffix.emit()
-        )
+impl Emittable for Substitution {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        let old_suffix = self.old_suffix.emit(ctx);
+        let new_suffix = self.new_suffix.emit(ctx);
+        let name = self.var.name(ctx);
+        format!("$({}:{}={})", name, old_suffix, new_suffix)
     }
 }

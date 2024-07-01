@@ -1,8 +1,8 @@
 use makemake::{
-    expr::Expr,
+    emitter::Emitter,
+    expr,
     function::{Function, Substitution},
-    makefile::Makefile,
-    var::Variable
+    makefile::Makefile
 };
 
 fn main() {
@@ -27,20 +27,20 @@ fn main() {
         .phony()
         .dep("main.c")
         .dep(obj.clone())
-        .cmd(
-            Expr::from(cc)
-                .then(cflags)
-                .then("-o")
-                .then(Variable::target())
-                .then(Variable::deps())
-        );
+        .cmd(expr!(
+            cc,
+            cflags,
+            "-o",
+            makefile.target_var(),
+            makefile.deps_var()
+        ));
 
     makefile
         .rule("clean")
         .phony()
         .dep(target)
         .dep(obj)
-        .cmd(Expr::from("rm -rf").then(Variable::deps()));
+        .cmd(expr!("rm -rf", makefile.deps_var()));
 
-    println!("{}", makefile.build());
+    print!("{}", makefile.build());
 }

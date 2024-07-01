@@ -1,8 +1,10 @@
 use crate::{
-    emittable::MakefileEmittable,
-    expr::{Expr, MakefileEmittableVec}
+    emittable::Emittable,
+    expr::{EmittableVec, Expr},
+    rrc::{rrc, RRC},
+    symbol_context::SymbolContext
 };
-use std::{cell::RefCell, fmt::Write, rc::Rc};
+use std::fmt::Write;
 
 struct Rule {
     is_phony: bool,
@@ -24,31 +26,35 @@ impl Rule {
     }
 }
 
-impl MakefileEmittable for Rule {
-    fn emit(&self) -> String {
+impl Emittable for Rule {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
         let mut result = String::new();
         if self.is_phony {
-            writeln!(&mut result, ".PHONY: {}", self.target.emit()).unwrap();
+            writeln!(&mut result, ".PHONY: {}", self.target.emit(ctx)).unwrap();
         }
         write!(
             &mut result,
             "{}: {}",
-            self.target.emit(),
-            self.dependencies.join_emit(" ")
+            self.target.emit(ctx),
+            self.dependencies.join_emit(" ", ctx)
         )
         .unwrap();
         if !self.order_only_dependencies.is_empty() {
             write!(
                 &mut result,
                 " | {}",
-                self.order_only_dependencies.join_emit(" ")
+                self.order_only_dependencies.join_emit(" ", ctx)
             )
             .unwrap();
         }
         for command in &self.commands {
             result.push('\n');
-            write!(&mut result, "\t{}", command.emit().replace('\n', "\\\n"))
-                .unwrap();
+            write!(
+                &mut result,
+                "\t{}",
+                command.emit(ctx).replace('\n', "\\\n")
+            )
+            .unwrap();
         }
         result
     }
@@ -56,13 +62,13 @@ impl MakefileEmittable for Rule {
 
 #[derive(Clone)]
 pub struct RuleRef {
-    rule: Rc<RefCell<Rule>>
+    rule: RRC<Rule>
 }
 
 impl RuleRef {
     pub(crate) fn new<E: Into<Expr>>(target: E) -> Self {
         RuleRef {
-            rule: Rc::new(RefCell::new(Rule::new(target.into())))
+            rule: rrc(Rule::new(target.into()))
         }
     }
 
@@ -106,8 +112,8 @@ impl RuleRef {
     }
 }
 
-impl MakefileEmittable for RuleRef {
-    fn emit(&self) -> String {
-        self.rule.borrow().emit()
+impl Emittable for RuleRef {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
+        self.rule.borrow().emit(ctx)
     }
 }

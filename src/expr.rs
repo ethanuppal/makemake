@@ -1,6 +1,7 @@
 use crate::{
-    emittable::MakefileEmittable,
+    emittable::Emittable,
     function::{Function, Substitution},
+    symbol_context::SymbolContext,
     var::Variable
 };
 use std::ops::{Add, AddAssign};
@@ -62,27 +63,31 @@ impl From<Substitution> for Expr {
     }
 }
 
-impl MakefileEmittable for Expr {
-    fn emit(&self) -> String {
+impl Emittable for Expr {
+    fn emit(&self, ctx: &mut SymbolContext) -> String {
         match &self {
             Expr::Empty => String::new(),
             Expr::Raw(string) => string.clone(),
-            Expr::Var(var) => var.emit(),
-            Expr::Concat(list) => list.join_emit(""),
-            Expr::SubstRef(subst) => subst.emit(),
-            Expr::Function(func) => func.emit()
+            Expr::Var(var) => var.emit(ctx),
+            Expr::Concat(list) => list.join_emit("", ctx),
+            Expr::SubstRef(subst) => subst.emit(ctx),
+            Expr::Function(func) => func.emit(ctx)
         }
     }
 }
 
-pub trait MakefileEmittableVec {
-    fn join_emit<S: AsRef<str>>(&self, sep: S) -> String;
+pub trait EmittableVec {
+    fn join_emit<S: AsRef<str>>(
+        &self, sep: S, ctx: &mut SymbolContext
+    ) -> String;
 }
 
-impl MakefileEmittableVec for Vec<Expr> {
-    fn join_emit<S: AsRef<str>>(&self, sep: S) -> String {
+impl EmittableVec for Vec<Expr> {
+    fn join_emit<S: AsRef<str>>(
+        &self, sep: S, ctx: &mut SymbolContext
+    ) -> String {
         self.iter()
-            .map(|e| e.emit())
+            .map(|e| e.emit(ctx))
             .collect::<Vec<_>>()
             .join(sep.as_ref())
     }
@@ -100,4 +105,18 @@ impl AddAssign for Expr {
     fn add_assign(&mut self, rhs: Self) {
         *self = std::mem::take(self).concat(rhs);
     }
+}
+
+#[macro_export]
+macro_rules! expr {
+    ($first:expr) => {
+        crate::Expr::from($first)
+    };
+    ($first:expr, $($rest:expr),+ $(,)?) => {{
+        let mut expr = crate::expr::Expr::from($first);
+        $(
+            expr = expr.then(crate::expr::Expr::from($rest));
+        )*
+        expr
+    }};
 }
