@@ -1,0 +1,13 @@
+#!/bin/sh
+
+function check {
+    prog=$1
+    shift
+    "$prog" "$@"
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+}
+
+check cargo clippy
+check cargo test
