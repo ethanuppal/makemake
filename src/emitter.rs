@@ -18,7 +18,7 @@ pub(crate) trait EmittableContainer {
     fn build_assign<V: Resolvable, E: Into<Expr>>(
         &mut self, kind: AssignmentKind, var: V, value: E
     ) -> Variable {
-        let var = var.resolve(&mut *self.ctx().borrow_mut());
+        let var = var.resolve(&mut self.ctx().borrow_mut());
         self.add(Box::new(Assignment::new(kind, var, value)));
         var
     }
@@ -49,19 +49,19 @@ pub trait Emitter {
 
 impl<T: EmittableContainer> Emitter for T {
     fn var<S: Resolvable>(&mut self, name: S) -> Variable {
-        name.resolve(&mut *self.ctx().borrow_mut())
+        name.resolve(&mut self.ctx().borrow_mut())
     }
 
     fn target_var(&mut self) -> Variable {
-        Variable::target(&mut *self.ctx().borrow_mut())
+        Variable::target(&mut self.ctx().borrow_mut())
     }
 
     fn first_dep_var(&mut self) -> Variable {
-        Variable::first_dep(&mut *self.ctx().borrow_mut())
+        Variable::first_dep(&mut self.ctx().borrow_mut())
     }
 
     fn deps_var(&mut self) -> Variable {
-        Variable::deps(&mut *self.ctx().borrow_mut())
+        Variable::deps(&mut self.ctx().borrow_mut())
     }
 
     fn comment<S: AsRef<str>>(&mut self, text: S) {

@@ -26,7 +26,7 @@ impl Makefile {
             writeln!(
                 &mut result,
                 "{}",
-                content.emit(&mut *self.ctx.borrow_mut())
+                content.emit(&mut self.ctx.borrow_mut())
             )
             .unwrap();
         }

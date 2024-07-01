@@ -110,12 +110,12 @@ impl AddAssign for Expr {
 #[macro_export]
 macro_rules! expr {
     ($first:expr) => {
-        crate::Expr::from($first)
+        $crate::Expr::from($first)
     };
     ($first:expr, $($rest:expr),+ $(,)?) => {{
-        let mut expr = crate::expr::Expr::from($first);
+        let mut expr = $crate::expr::Expr::from($first);
         $(
-            expr = expr.then(crate::expr::Expr::from($rest));
+            expr = expr.then($crate::expr::Expr::from($rest));
         )*
         expr
     }};

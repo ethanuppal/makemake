@@ -74,7 +74,7 @@ impl Resolvable for Variable {
     }
 
     fn name<'a>(&self, ctx: &'a mut SymbolContext) -> &'a str {
-        &ctx.name(*self)
+        ctx.name(*self)
     }
 }
 

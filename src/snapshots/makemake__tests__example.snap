@@ -14,3 +14,10 @@ my_rule: dep1 dep2 | oodep1 oodep2
 	foo -f $(A) -o $@ -i $<
 	cc $(value C) and rest of cmd
 SIM ?= icarus
+ifdef $(a)
+# a
+else ifdef $(b)
+# b
+else
+# c
+endif
