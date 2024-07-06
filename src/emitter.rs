@@ -24,26 +24,55 @@ pub(crate) trait EmittableContainer {
     }
 }
 
+/// A wrapper around builders for Makefiles or parts of Makefiles.
 pub trait Emitter {
+    /// Creates or retrieves the variable named `name`.
     fn var<S: Resolvable>(&mut self, name: S) -> Variable;
 
+    /// The special variable for the rule target.
+    ///
+    /// Requires: must be used within a rule.
     fn target_var(&mut self) -> Variable;
+
+    /// The special variable for the first rule dependency.
+    ///
+    /// Requires: must be used within a rule.
     fn first_dep_var(&mut self) -> Variable;
+
+    /// The special variable for the rule dependencies.
+    ///
+    /// Requires: must be used within a rule.
     fn deps_var(&mut self) -> Variable;
 
+    /// Adds a comment with contents `text` to the Makefile. Handles newlines.
     fn comment<S: AsRef<str>>(&mut self, text: S);
+
+    /// Inserts a newline for readability.
     fn newline(&mut self);
+
+    /// Assigns `var` to `value`.
     fn assign<V: Resolvable, E: Into<Expr>>(
         &mut self, var: V, value: E
     ) -> Variable;
+
+    /// Assigns `var` to `value`, unless it has already been assigned or
+    /// provided a value by the user via `make -D`.
     fn assign_without_overwrite<V: Resolvable, E: Into<Expr>>(
         &mut self, var: V, value: E
     ) -> Variable;
+
+    /// Appends `value` to `var`.
     fn append<V: Resolvable, E: Into<Expr>>(
         &mut self, var: V, value: E
     ) -> Variable;
+
+    /// Includes the contents of `path_expr`.
     fn include<S: AsRef<str>>(&mut self, path_expr: S);
+
+    /// Constructs a new rule, returning a builder.
     fn rule<E: Into<Expr>>(&mut self, target: E) -> RuleRef;
+
+    /// Constructs a new conditional, returning a builder.
     fn branch_tree(&mut self) -> ConditionalRef;
 }
 

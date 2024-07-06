@@ -57,6 +57,8 @@ impl EmittableContainer for Branch {
     }
 }
 
+/// A Makefile conditional, e.g., `ifdef`, containing any number of branches,
+/// the last of which may be the only `else` in the conditional.
 pub(crate) struct Conditional {
     branches: Vec<Branch>
 }
@@ -95,6 +97,7 @@ impl Emittable for Conditional {
     }
 }
 
+/// Builder for a Makefile conditional.
 #[derive(Clone)]
 pub struct ConditionalRef {
     conditional: RRC<Conditional>,
@@ -102,6 +105,7 @@ pub struct ConditionalRef {
 }
 
 impl ConditionalRef {
+    /// Constructs an empty conditional.
     pub(crate) fn new(ctx: RRC<SymbolContext>) -> ConditionalRef {
         Self {
             conditional: rrc(Conditional::new()),
@@ -109,12 +113,14 @@ impl ConditionalRef {
         }
     }
 
+    /// Appends an `ifeq` clause to the conditional.
     pub fn when_eq<E1: Into<Expr>, E2: Into<Expr>, F: FnOnce(&mut Branch)>(
         self, lhs: E1, rhs: E2, f: F
     ) -> ConditionalRef {
         self.build_conditional(Some(Condition::Eq(lhs.into(), rhs.into())), f)
     }
 
+    /// Appends an `ifeq` clause to the conditional.
     pub fn when_def<V: Resolvable, F: FnOnce(&mut Branch)>(
         self, var: V, f: F
     ) -> ConditionalRef {
@@ -122,6 +128,7 @@ impl ConditionalRef {
         self.build_conditional(Some(Condition::Def(var)), f)
     }
 
+    /// Appends an `ifundef` clause to the conditional.
     pub fn when_undef<V: Resolvable, F: FnOnce(&mut Branch)>(
         self, var: V, f: F
     ) -> ConditionalRef {
@@ -129,10 +136,12 @@ impl ConditionalRef {
         self.build_conditional(Some(Condition::Undef(var)), f)
     }
 
+    /// Finalizes the conditional with an `else` clause.
     pub fn otherwise<F: FnOnce(&mut Branch)>(self, f: F) -> ConditionalRef {
         self.build_conditional(None, f)
     }
 
+    /// Adds a branch to the conditional.
     fn build_conditional<F: FnOnce(&mut Branch)>(
         self, condition: Option<Condition>, f: F
     ) -> ConditionalRef {

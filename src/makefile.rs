@@ -1,12 +1,11 @@
 use std::fmt::Write;
 
 use crate::{
-    emittable::EmittableRef,
-    emitter::EmittableContainer,
-    rrc::{rrc, RRC},
+    emittable::EmittableRef, emitter::EmittableContainer, rrc::RRC,
     symbol_context::SymbolContext
 };
 
+/// A Makefile.
 #[derive(Default)]
 pub struct Makefile {
     contents: Vec<EmittableRef>,
@@ -14,13 +13,12 @@ pub struct Makefile {
 }
 
 impl Makefile {
+    /// Constructs an empty Makefile.
     pub fn new() -> Self {
-        Self {
-            contents: Vec::new(),
-            ctx: rrc(SymbolContext::default())
-        }
+        Self::default()
     }
 
+    /// Converts this Makefile into its textual representation.
     pub fn build(mut self) -> String {
         let mut result = String::new();
         for content in self.contents.drain(..) {

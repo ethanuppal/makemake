@@ -108,16 +108,23 @@ impl AddAssign for Expr {
     }
 }
 
+/// `expr!(a, b; c)` constructs an expression that separates `a` and `b` with a
+/// space and places `b` and `c` adjacent. The non-empty set of inputs passed
+/// can be any values whose types implement `Into<Expr>`, which includes all
+/// string-like types, [`Expr`], [`Variable`], [`Function`], etc.
 #[macro_export]
 macro_rules! expr {
     ($first:expr) => {
-        $crate::Expr::from($first)
+        $crate::expr::Expr::from($first)
     };
-    ($first:expr, $($rest:expr),+ $(,)?) => {{
+    ($first:expr, $($rest:tt)*) => {{
         let mut expr = $crate::expr::Expr::from($first);
-        $(
-            expr = expr.then($crate::expr::Expr::from($rest));
-        )*
+        expr = expr.concat($crate::expr!($($rest)*));
+        expr
+    }};
+    ($first:expr; $($rest:tt)*) => {{
+        let mut expr = $crate::expr::Expr::from($first);
+        expr = expr.then($crate::expr!($($rest)*));
         expr
     }};
 }

@@ -4,12 +4,14 @@ use crate::{
     symbol_context::SymbolContext
 };
 
+/// A Makefile directive such as `include` (although, use [`Include`] for that).
 pub struct Directive {
     name: String,
     args: Vec<Expr>
 }
 
 impl Directive {
+    /// Constructs a new directive `name` with arguments `args`.
     pub fn new<S: AsRef<str>, E: Into<Vec<Expr>>>(name: S, args: E) -> Self {
         Self {
             name: name.as_ref().to_string(),
@@ -24,11 +26,13 @@ impl Emittable for Directive {
     }
 }
 
+/// A helper for constructing an include [`Directive`].
 pub struct Include {
     directive: Directive
 }
 
 impl Include {
+    /// Constructs a new include directive for path `path_expr`.
     pub fn new<S: AsRef<str>>(path_expr: S) -> Self {
         Self {
             directive: Directive::new(

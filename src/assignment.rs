@@ -5,6 +5,10 @@ use crate::{
     var::Variable
 };
 
+/// See sections [6.5](https://www.gnu.org/software/make/manual/make.html#Setting)
+/// for information on `Overwrite` and `Underwrite` and section
+/// [6.6](https://www.gnu.org/software/make/manual/make.html#Appending) for
+/// information on `Append`.
 pub enum AssignmentKind {
     Overwrite,
     Underwrite,
@@ -22,6 +26,7 @@ impl Emittable for AssignmentKind {
     }
 }
 
+/// An assignment to or an instance of appending a value to a variable
 pub struct Assignment {
     kind: AssignmentKind,
     var: Variable,
@@ -29,6 +34,7 @@ pub struct Assignment {
 }
 
 impl Assignment {
+    /// Constructs an assignment like `kind` for `var` with the given `value`.
     pub(crate) fn new<E: Into<Expr>>(
         kind: AssignmentKind, var: Variable, value: E
     ) -> Self {

@@ -5,6 +5,7 @@ use crate::{
 };
 use paste::paste;
 
+/// A Makefile function.
 pub struct Function {
     name: String,
     args: Vec<Expr>
@@ -119,6 +120,7 @@ impl Emittable for Function {
     }
 }
 
+/// A suffix substitution.
 pub struct Substitution {
     var: VariablePromise,
     old_suffix: Expr,
@@ -126,6 +128,8 @@ pub struct Substitution {
 }
 
 impl Substitution {
+    /// Constructs a new suffix substitution that substitutes `old_suffix` for
+    /// `new_suffix` in `var`.
     pub fn new<V: Into<VariablePromise>, E1: Into<Expr>, E2: Into<Expr>>(
         var: V, old_suffix: E1, new_suffix: E2
     ) -> Self {

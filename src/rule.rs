@@ -7,6 +7,7 @@ use crate::{
     symbol_context::SymbolContext
 };
 
+/// A Makefile rule.
 struct Rule {
     is_phony: bool,
     target: Expr,
@@ -61,6 +62,7 @@ impl Emittable for Rule {
     }
 }
 
+/// Builder for a Makefile rule.
 #[derive(Clone)]
 pub struct RuleRef {
     rule: RRC<Rule>
@@ -92,21 +94,27 @@ impl RuleRef {
         self.rule.borrow_mut().commands.push(cmd.into());
     }
 
+    /// Marks this rule as "phony".
     pub fn phony(self) -> Self {
         self.set_phony();
         self
     }
 
+    /// Adds a dependency in the order specified by the order of calls to this
+    /// function.
     pub fn dep<E: Into<Expr>>(self, dep: E) -> Self {
         self.add_dep(dep);
         self
     }
 
+    /// Adds a so-called "order-only" dependency in the order specified by the
+    /// order of calls to this function. (Hopefully that's not confusing).
     pub fn order_only_dep<E: Into<Expr>>(self, dep: E) -> Self {
         self.add_order_only_dep(dep);
         self
     }
 
+    /// Adds a command to the rule.
     pub fn cmd<E: Into<Expr>>(self, cmd: E) -> Self {
         self.add_cmd(cmd);
         self

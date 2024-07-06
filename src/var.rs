@@ -9,6 +9,8 @@ pub(crate) enum _Variable {
     User(SymbolID)
 }
 
+/// A Makefile variable that exists only in the context of the [`SymbolContext`]
+/// in which it was defined.
 #[derive(Clone, Copy)]
 pub struct Variable {
     pub(crate) value: _Variable

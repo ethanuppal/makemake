@@ -9,6 +9,11 @@ argument - you can set the value of a variable to a string, a function, or
 even another variable, without needing `.into()`s everywhere. There's also a
 helper `expr!` macro for building more complex expressions.
 
+Although version-agnostic, `makemake` does support GNU `make` features. If
+you intend your Makefiles to be extremely portable (although even macOS
+comes with GNU `make`), avoid those features as you would when writing
+Makefiles by hand.
+
 ## Usage
 
 Run this command in your rust project root:
@@ -33,7 +38,7 @@ let mut makefile = Makefile::new();
 We'll want variables for the source files, object files, compiler, and
 flags.
 ```rs
-let src = makefile.assign("SRC", Function::wildcard(["src/*.c".into()]));
+let src = makefile.assign("SRC", Function::wildcard([expr!("src/*.c")]));
 let obj = makefile.assign("OBJ", Substitution::new(src, ".c", ".o"));
 let cc = makefile.assign_without_overwrite(
     "CC",
@@ -46,13 +51,16 @@ let target = makefile.assign("TARGET", "main");
 Next, we'll define the rule to create the target.
 ```rs
 makefile.rule(target).dep("main.c").dep(obj).cmd(expr!(
-    cc,
-    cflags,
-    "-o",
-    makefile.target_var(),
+    cc;
+    cflags;
+    "-o";
+    makefile.target_var();
     makefile.deps_var()
 ));
 ```
+> In the `expr!` macro, use `;` to separate arguments by spaces and `,` to
+> put
+them directly adjacent.
 
 Finally, we can print the resultant Makefile.
 ```rs
@@ -65,7 +73,8 @@ cargo run --example c_project > examples/Makefile
 cd examples
 make && ./main
 ```
-The actual example also comes with a `make clean`!
+The actual example (`c_project.rs` in the `examples/` directory) also comes
+with a `make clean`!
 
 ### Setting Up Git Hooks
 
