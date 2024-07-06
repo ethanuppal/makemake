@@ -1,10 +1,11 @@
+use std::ops::{Add, AddAssign};
+
 use crate::{
     emittable::Emittable,
     function::{Function, Substitution},
     symbol_context::SymbolContext,
     var::Variable
 };
-use std::ops::{Add, AddAssign};
 
 pub enum Expr {
     Empty,

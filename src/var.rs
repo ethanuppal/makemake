@@ -4,9 +4,14 @@ use crate::{
 };
 
 #[derive(Clone, Copy)]
-pub enum Variable {
+pub(crate) enum _Variable {
     Builtin(SymbolID),
     User(SymbolID)
+}
+
+#[derive(Clone, Copy)]
+pub struct Variable {
+    pub(crate) value: _Variable
 }
 
 impl Variable {
@@ -23,8 +28,8 @@ impl Variable {
     }
 
     pub(crate) fn id(&self) -> SymbolID {
-        match &self {
-            Self::Builtin(id) | Self::User(id) => *id
+        match self.value {
+            _Variable::Builtin(id) | _Variable::User(id) => id
         }
     }
 }
@@ -32,9 +37,9 @@ impl Variable {
 impl Emittable for Variable {
     fn emit(&self, ctx: &mut SymbolContext) -> String {
         let name = self.name(ctx);
-        match &self {
-            Self::Builtin(_) => format!("${}", name),
-            Self::User(_) => format!("$({})", name)
+        match self.value {
+            _Variable::Builtin(_) => format!("${}", name),
+            _Variable::User(_) => format!("$({})", name)
         }
     }
 }

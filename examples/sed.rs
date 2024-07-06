@@ -1,4 +1,4 @@
-use makemake::{emitter::Emitter, function::Function, makefile::Makefile};
+use makemake::prelude::*;
 
 fn main() {
     let mut makefile = Makefile::new();

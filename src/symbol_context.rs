@@ -1,5 +1,6 @@
-use crate::var::Variable;
 use std::collections::HashMap;
+
+use crate::var::{Variable, _Variable};
 
 pub type ImmutableString = Box<str>;
 pub type SymbolID = i32;
@@ -34,9 +35,13 @@ impl SymbolContext {
         } else {
             let Symbol { key, id } = self.new_symbol(var_name);
             let var = if IS_BUILTIN {
-                Variable::Builtin(id)
+                Variable {
+                    value: _Variable::Builtin(id)
+                }
             } else {
-                Variable::User(id)
+                Variable {
+                    value: _Variable::User(id)
+                }
             };
             self.store.insert(key, var);
             var

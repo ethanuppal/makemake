@@ -1,10 +1,11 @@
+use std::fmt::Write;
+
 use crate::{
     emittable::Emittable,
     expr::{EmittableVec, Expr},
     rrc::{rrc, RRC},
     symbol_context::SymbolContext
 };
-use std::fmt::Write;
 
 struct Rule {
     is_phony: bool,

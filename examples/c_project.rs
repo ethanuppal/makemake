@@ -1,9 +1,4 @@
-use makemake::{
-    emitter::Emitter,
-    expr,
-    function::{Function, Substitution},
-    makefile::Makefile
-};
+use makemake::prelude::*;
 
 fn main() {
     let mut makefile = Makefile::new();
@@ -23,10 +18,10 @@ fn main() {
     makefile.newline();
 
     makefile
-        .rule(target.clone())
+        .rule(target)
         .phony()
         .dep("main.c")
-        .dep(obj.clone())
+        .dep(obj)
         .cmd(expr!(
             cc,
             cflags,

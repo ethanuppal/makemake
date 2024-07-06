@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 use crate::{
     emittable::{Emittable, EmittableRef},
     emitter::EmittableContainer,
@@ -6,7 +8,6 @@ use crate::{
     symbol_context::{Resolvable, SymbolContext},
     var::Variable
 };
-use std::fmt::Write;
 
 pub(crate) enum Condition {
     Eq(Expr, Expr),

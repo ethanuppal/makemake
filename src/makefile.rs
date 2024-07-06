@@ -1,10 +1,11 @@
+use std::fmt::Write;
+
 use crate::{
     emittable::EmittableRef,
     emitter::EmittableContainer,
     rrc::{rrc, RRC},
     symbol_context::SymbolContext
 };
-use std::fmt::Write;
 
 #[derive(Default)]
 pub struct Makefile {
