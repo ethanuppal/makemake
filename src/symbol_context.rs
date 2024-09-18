@@ -21,7 +21,7 @@ impl SymbolContext {
         self.get_select::<S, false>(var)
     }
 
-    pub fn name(&self, var: Variable) -> &ImmutableString {
+    pub fn name(&self, var: Variable) -> &str {
         &self.strings[var.id() as usize]
     }
 

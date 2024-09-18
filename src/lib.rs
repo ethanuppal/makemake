@@ -59,8 +59,7 @@
 //! ));
 //! ```
 //! > In the `expr!` macro, use `;` to separate arguments by spaces and `,` to
-//! > put
-//! them directly adjacent.
+//! > put them directly adjacent.
 //!
 //! Finally, we can print the resultant Makefile.
 //! ```rs
@@ -85,7 +84,7 @@
 //!
 //! ## License
 //!
-//! This project is licensed under the [MIT License](LICENSE), a copy of which
+//! This project is licensed under the [LGPL License](LICENSE), a copy of which
 //! is available in this directory.
 
 pub mod assignment;

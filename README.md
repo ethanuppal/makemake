@@ -59,8 +59,7 @@ makefile.rule(target).dep("main.c").dep(obj).cmd(expr!(
 ));
 ```
 > In the `expr!` macro, use `;` to separate arguments by spaces and `,` to
-> put
-them directly adjacent.
+> put them directly adjacent.
 
 Finally, we can print the resultant Makefile.
 ```rs
@@ -85,5 +84,5 @@ After cloning the repository, run the following script to set up the hooks:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), a copy of which
+This project is licensed under the [LGPL License](LICENSE), a copy of which
 is available in this directory.
